@@ -6,7 +6,7 @@ Description: Get chunks of XML scholarly articles without
     out the information you want. Works with outputs from 
     package 'fulltext', 'xml2' package documents, and file paths to 
     XML documents.
-Version: 0.1.0
+Version: 0.2.0
 License: MIT + file LICENSE
 Authors@R: c(
     person("Scott", "Chamberlain",
@@ -18,16 +18,16 @@ URL: https://github.com/ropensci/pubchunks
 BugReports: https://github.com/ropensci/pubchunks/issues
 Encoding: UTF-8
 Language: en-US
-Imports: xml2 (>= 1.1.1), data.table
+Imports: xml2 (>= 1.1.1), data.table, rcrossref
 Suggests: fulltext (>= 1.0.1), testthat
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 X-schema.org-applicationCategory: Literature
 X-schema.org-keywords: text-ming, literature, pdf, xml, publications,
         citations, full-text, TDM
 X-schema.org-isPartOf: https://ropensci.org
 NeedsCompilation: no
-Packaged: 2018-10-04 20:07:53 UTC; sckott
+Packaged: 2019-01-21 22:11:45 UTC; sckott
 Author: Scott Chamberlain [aut, cre] (<https://orcid.org/0000-0003-1444-9135>)
 Maintainer: Scott Chamberlain <sckott@protonmail.com>
 Repository: CRAN
-Date/Publication: 2018-10-14 16:50:07 UTC
+Date/Publication: 2019-01-21 22:50:03 UTC

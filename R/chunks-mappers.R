@@ -1,38 +1,47 @@
 title <- function(b, from){
-  switch(from,
-         elife = f1txt(b, "//title-group/article-title"),
-         plos = f1txt(b, "//title-group/article-title"),
-         entrez = f1txt(b, "//title-group/article-title"),
-         elsevier = f1txt(b, "//dc:title"),
-         hindawi = f1txt(b, "//article-title"),
-         pensoft = f1txt(b, "//article-title"),
-         peerj = f1txt(b, "//article-title"),
-         copernicus = f1txt(b, "//article-title"),
-         frontiers = f1txt(b, "//article-title"),
-         f1000research = f1txt(b, "//article-title")
+  switch(
+    from,
+    elife = f1txt(b, "//title-group/article-title"),
+    plos = f1txt(b, "//title-group/article-title"),
+    entrez = f1txt(b, "//title-group/article-title"),
+    elsevier = f1txt(b, "//dc:title"),
+    hindawi = f1txt(b, "//article-title"),
+    pensoft = f1txt(b, "//article-title"),
+    peerj = f1txt(b, "//article-title"),
+    copernicus = f1txt(b, "//article-title"),
+    frontiers = f1txt(b, "//article-title"),
+    f1000research = f1txt(b, "//article-title"),
+    f1txt(b, "//article-title") %|na|% f1txt(b, "//Article//Title")
   )
 }
 
 doi <- function(b, from){
-  switch(from,
-         elife = f1txt(b, "//article-id[@pub-id-type='doi']"),
-         plos = f1txt(b, "//article-id[@pub-id-type='doi']"),
-         entrez = f1txt(b, "//article-id[@pub-id-type='doi']"),
-         elsevier = f1txt(b, "//dc:identifier"),
-         copernicus = f1txt(b, "//article-id[@pub-id-type='doi']"),
-         frontiers = f1txt(b, "//article-id[@pub-id-type='doi']"),
-         f1000research = f1txt(b, "//article-id[@pub-id-type='doi']")
+  switch(
+    from,
+    elife = f1txt(b, "//article-id[@pub-id-type='doi']"),
+    plos = f1txt(b, "//article-id[@pub-id-type='doi']"),
+    entrez = f1txt(b, "//article-id[@pub-id-type='doi']"),
+    elsevier = f1txt(b, "//dc:identifier"),
+    copernicus = f1txt(b, "//article-id[@pub-id-type='doi']"),
+    frontiers = f1txt(b, "//article-id[@pub-id-type='doi']"),
+    f1000research = f1txt(b, "//article-id[@pub-id-type='doi']"),
+    f1txt(b, "//article-id[@pub-id-type='doi']") %|na|% f1txt(b, "//ArticleId[@IdType='doi']")
   )
 }
 
 categories <- function(b, from){
-  switch(from,
-         elife = xml2::xml_text(xml2::xml_find_all(xml2::xml_find_all(b, "//article-categories")[[1]], "//subject")),
-         plos = xml2::xml_text(xml2::xml_find_all(xml2::xml_find_all(b, "//article-categories")[[1]], "//subject")),
-         entrez = xml2::xml_text(xml2::xml_find_all(xml2::xml_find_all(b, "//article-categories")[[1]], "//subject")),
-         elsevier = falltxt(b, "//dcterms:subject"),
-         frontiers = xml2::xml_text(xml2::xml_find_all(xml2::xml_find_all(b, "//article-categories")[[1]], "//subject")),
-         f1000research = xml2::xml_text(xml2::xml_find_all(xml2::xml_find_all(b, "//article-categories")[[1]], "//subject"))
+  switch(
+    from,
+    elife = xml2::xml_text(xml2::xml_find_all(xml2::xml_find_all(b, "//article-categories")[[1]], "//subject")),
+    plos = xml2::xml_text(xml2::xml_find_all(xml2::xml_find_all(b, "//article-categories")[[1]], "//subject")),
+    entrez = xml2::xml_text(xml2::xml_find_all(xml2::xml_find_all(b, "//article-categories")[[1]], "//subject")),
+    elsevier = falltxt(b, "//dcterms:subject"),
+    frontiers = xml2::xml_text(xml2::xml_find_all(xml2::xml_find_all(b, "//article-categories")[[1]], "//subject")),
+    f1000research = xml2::xml_text(xml2::xml_find_all(xml2::xml_find_all(b, "//article-categories")[[1]], "//subject")),
+    {
+      bb <- xml2::xml_find_all(b, "//article-categories")
+      if (!length(bb) == 0) xml2::xml_text(xml2::xml_find_all(bb[[1]], "//subject")) else NULL
+    }
   )
 }
 
@@ -55,7 +64,8 @@ authors <- function(b, from){
     peerj = get_auth(b),
     copernicus = get_auth(b),
     frontiers = get_auth(b),
-    f1000research = get_auth(b)
+    f1000research = get_auth(b),
+    get_auth(b) %|na|% xml2::xml_find_all(b, "//AuthorList//Author")
   )
 }
 
@@ -88,7 +98,8 @@ aff <- function(b, from){
     peerj = get_aff(b),
     copernicus = NULL,
     frontiers = get_aff(b),
-    f1000research = get_aff(b)
+    f1000research = get_aff(b),
+    get_aff(b)
   )
 }
 
@@ -103,7 +114,6 @@ merge_node_groups <- function(x) {
         nms),
       id = xml2::xml_attr(z, "id")
     )
-
   })
 }
 
@@ -114,7 +124,9 @@ keywords <- function(b, from){
     plos = NULL,
     entrez = xml2::xml_text(xml2::xml_find_all(b, "//kwd-group/kwd")),
     elsevier = falltxt(b, "//ce:keyword"),
-    f1000research = xml2::xml_text(xml2::xml_find_all(b, "//kwd-group/kwd"))
+    f1000research = xml2::xml_text(xml2::xml_find_all(b, "//kwd-group/kwd")),
+    mdpi = xml2::xml_text(xml2::xml_find_all(b, "//kwd-group/kwd")),
+    xml2::xml_text(xml2::xml_find_all(b, "//kwd-group/kwd"))
   )
 }
 
@@ -127,7 +139,8 @@ body <- function(b, from){
       xml2::xml_ns_strip(b)
       falltxt(b, "//body")
     },
-    f1000research = xml2::xml_text(xml2::xml_find_all(b, "//body//p"))
+    f1000research = xml2::xml_text(xml2::xml_find_all(b, "//body//p")),
+    xml2::xml_text(xml2::xml_find_all(b, "//body//p"))
   )
 }
 
@@ -146,7 +159,8 @@ abstract <- function(b, from){
     peerj = f1txt(b, "//abstract"),
     copernicus = f1txt(b, "//abstract"),
     frontiers = f1txt(b, "//abstract"),
-    f1000research = f1txt(b, "//abstract")
+    f1000research = f1txt(b, "//abstract"),
+    f1txt(b, "//abstract")
   )
 }
 
@@ -190,7 +204,8 @@ refs <- function(b, from){
     peerj = falltxt(b, "//ref-list/ref"),
     copernicus = falltxt(b, "//ref-list/ref"),
     frontiers = falltxt(b, "//ref-list/ref"),
-    f1000research = falltxt(b, "//ref-list/ref")
+    f1000research = falltxt(b, "//ref-list/ref"),
+    falltxt(b, "//ref-list/ref")
   )
 }
 
@@ -203,7 +218,8 @@ publisher <- function(b, from){
     elsevier = f1txt(b, "//prism:publisher"),
     copernicus = f1txt(b, "//publisher/publisher-name"),
     frontiers = f1txt(b, "//publisher/publisher-name"),
-    f1000research = f1txt(b, "//publisher/publisher-name")
+    f1000research = f1txt(b, "//publisher/publisher-name"),
+    f1txt(b, "//publisher/publisher-name")
   )
 }
 
@@ -216,7 +232,8 @@ journal_meta <- function(b, from){
     elsevier = NULL,
     copernicus = lapply(xml2::xml_children(xml2::xml_find_first(b, "//journal-meta")), xml_node_parse),
     frontiers = lapply(xml2::xml_children(xml2::xml_find_first(b, "//journal-meta")), xml_node_parse),
-    f1000research = lapply(xml2::xml_children(xml2::xml_find_first(b, "//journal-meta")), xml_node_parse)
+    f1000research = lapply(xml2::xml_children(xml2::xml_find_first(b, "//journal-meta")), xml_node_parse),
+    lapply(xml2::xml_children(xml2::xml_find_first(b, "//journal-meta")), xml_node_parse)
   )
 }
 
@@ -229,7 +246,8 @@ article_meta <- function(b, from){
     elsevier = NULL,
     copernicus = lapply(xml2::xml_children(xml2::xml_find_first(b, "//article-meta")), xml_node_parse),
     frontiers = lapply(xml2::xml_children(xml2::xml_find_first(b, "//article-meta")), xml_node_parse),
-    f1000research = lapply(xml2::xml_children(xml2::xml_find_first(b, "//article-meta")), xml_node_parse)
+    f1000research = lapply(xml2::xml_children(xml2::xml_find_first(b, "//article-meta")), xml_node_parse),
+    lapply(xml2::xml_children(xml2::xml_find_first(b, "//article-meta")), xml_node_parse)
   )
 }
 
@@ -238,7 +256,8 @@ acknowledgments <- function(b, from){
          elife = falltxt(b, "//ack/p"),
          plos = falltxt(b, "//ack/p"),
          entrez = falltxt(b, "//ack/p"),
-         elsevier = f1txt(b, "//ce:acknowledgment")
+         elsevier = f1txt(b, "//ce:acknowledgment"),
+         falltxt(b, "//ack/p")
   )
 }
 
@@ -256,7 +275,8 @@ permissions <- function(b, from){
          },
          copernicus = getperms(b),
          frontiers = getperms(b),
-         f1000research = getperms(b)
+         f1000research = getperms(b),
+         getperms(b)
   )
 }
 
@@ -276,7 +296,8 @@ front <- function(b, from){
          elsevier = NULL,
          copernicus = get_forb(b, "//front"),
          frontiers = get_forb(b, "//front"),
-         f1000research = get_forb(b, "//front")
+         f1000research = get_forb(b, "//front"),
+         get_forb(b, "//front")
   )
 }
 
@@ -288,7 +309,8 @@ back <- function(b, from){
          elsevier = NULL,
          copernicus = get_forb(b, "//back"),
          frontiers = get_forb(b, "//back"),
-         f1000research = get_forb(b, "//back")
+         f1000research = get_forb(b, "//back"),
+         get_forb(b, "//back")
   )
 }
 
@@ -306,7 +328,8 @@ history <- function(b, from){
          entrez = history2date(b),
          elsevier = NULL,
          frontiers = history2date(b),
-         f1000research = history2date(b)
+         f1000research = history2date(b),
+         history2date(b)
   )
 }
 
