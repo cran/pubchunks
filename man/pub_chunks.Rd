@@ -75,6 +75,7 @@ pub_chunks(x, "acknowledgments")
 pub_chunks(x, "refs")
 pub_chunks(x, c("title", "refs"))
 
+\dontrun{
 # works the same with the xml already in a string
 xml <- paste0(readLines(x), collapse = "")
 pub_chunks(xml, "title")
@@ -90,6 +91,7 @@ pub_chunks(x, "abstract")
 pub_chunks(x, "authors")
 pub_chunks(x, "aff")
 pub_chunks(x, "title")
+pub_chunks(x, "refs")$refs
 pub_chunks(x, c("abstract", "title", "authors", "refs"))
 
 # Pensoft
@@ -97,6 +99,7 @@ x <- system.file("examples/pensoft_1.xml", package = "pubchunks")
 pub_chunks(x, "abstract")
 pub_chunks(x, "aff")
 pub_chunks(x, "title")
+pub_chunks(x, "refs")$refs
 pub_chunks(x, c("abstract", "title", "authors", "refs"))
 
 # Peerj
@@ -105,37 +108,42 @@ pub_chunks(x, "abstract")
 pub_chunks(x, "authors")
 pub_chunks(x, "aff")
 pub_chunks(x, "title")
+pub_chunks(x, "refs")$refs
 pub_chunks(x, c("abstract", "title", "authors", "refs"))
 
 # Frontiers
 x <- system.file("examples/frontiers_1.xml", package = "pubchunks")
 pub_chunks(x, "authors")
 pub_chunks(x, "aff")
+pub_chunks(x, "refs")$refs
 pub_chunks(x, c("doi", "abstract", "title", "authors", "refs", "abstract"))
 
 # eLife
 x <- system.file("examples/elife_1.xml", package = "pubchunks")
 pub_chunks(x, "authors")
 pub_chunks(x, "aff")
+pub_chunks(x, "refs")$refs
 pub_chunks(x, c("doi", "title", "authors", "refs"))
 
 # f1000research
-x <- system.file("examples/f1000research_1.xml", package = "pubchunks")
+x <- system.file("examples/f1000research_3.xml", package = "pubchunks")
 pub_chunks(x, "title")
 pub_chunks(x, "aff")
+pub_chunks(x, "refs")$refs
 pub_chunks(x, c("doi", "title", "authors", "keywords", "refs"))
 
-\dontrun{
 # Copernicus
 x <- system.file("examples/copernicus_1.xml", package = "pubchunks")
 pub_chunks(x, c("doi", "abstract", "title", "authors", "refs"))
 pub_chunks(x, "aff")
+pub_chunks(x, "refs")$refs
 
 # MDPI
 x <- system.file("examples/mdpi_1.xml", package = "pubchunks")
 x <- system.file("examples/mdpi_2.xml", package = "pubchunks")
 pub_chunks(x, "title")
 pub_chunks(x, "aff")
+pub_chunks(x, "refs")$refs
 vv <- pub_chunks(x, c("doi", "title", "authors", "keywords", "refs", 
   "abstract", "categories"))
 vv$doi

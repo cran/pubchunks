@@ -5,8 +5,11 @@
 #' fine.
 #'
 #' @name pubchunks-package
+#' @importFrom stats na.omit
+#' @importFrom data.table rbindlist setDF
+#' @importFrom rcrossref cr_journals
 #' @aliases pubchunks
 #' @docType package
-#' @author Scott Chamberlain <myrmecocystus+r@@gmail.com>
+#' @author Scott Chamberlain
 #' @keywords package
 NULL
